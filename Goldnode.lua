@@ -115,7 +115,10 @@ end)
 --// SWING GOLD NODES
 local function swingGoldNodes()
     local now = getServerTime()
-    if now - lastSwing < 0.05 then return end
+    if now - lastSwing < 0.08 then
+        print("Too fast!")
+        return 
+    end
     lastSwing = now
 
     local hits = {}
@@ -126,6 +129,7 @@ local function swingGoldNodes()
     -- get the real interpolation buffer (same as the game script)
     local buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
 
+    print("Checking Resources")
     for _, v in pairs(resources:GetChildren()) do
         if v:IsA("Model") and v.Name == "Gold Node" then
             local id = v:GetAttribute("EntityID")
@@ -133,13 +137,15 @@ local function swingGoldNodes()
                 local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
                 if part then
                     if (root.Position - part.Position).Magnitude <= RANGE then
-                        table.insert(hits, id) -- must be NUMBER only
+                        print("Adding ID")
+                        hits[#hits+1] = id   -- MUST be only the number
                     end
                 end
             end
         end
     end
 
+    print("Swinging!")
     if #hits > 0 then
         Packets.SwingTool.send({
             entityIDs = hits,      -- array of numbers
@@ -148,6 +154,7 @@ local function swingGoldNodes()
             buffer = buffer        -- one buffer only
         })
     end
+    print("Swung!")
 end
 
 --// LOOP
