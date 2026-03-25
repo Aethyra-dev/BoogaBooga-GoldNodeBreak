@@ -120,16 +120,18 @@ local function swingGoldNodes()
     local resources = workspace:FindFirstChild("Resources")
     if not resources then return end
 
+    -- get the real interpolation buffer (same as the game script)
+    local buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
+
     for _, v in pairs(resources:GetChildren()) do
-        if v:IsA("Model") and v.Name == "Gold Node" and v:GetAttribute("EntityID") then
-            local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
-            if part then
-                local dist = (root.Position - part.Position).Magnitude
-                if dist <= RANGE then
-                    table.insert(hits, {
-                        entityID = v:GetAttribute("EntityID"),
-                        buffer = nil
-                    })
+        if v:IsA("Model") and v.Name == "Gold Node" then
+            local id = v:GetAttribute("EntityID")
+            if id then
+                local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    if (root.Position - part.Position).Magnitude <= RANGE then
+                        table.insert(hits, id) -- must be NUMBER only
+                    end
                 end
             end
         end
@@ -137,9 +139,10 @@ local function swingGoldNodes()
 
     if #hits > 0 then
         Packets.SwingTool.send({
-            entityIDs = hits,
+            entityIDs = hits,      -- array of numbers
             cframe = char:GetPivot(),
-            timestamp = now
+            timestamp = now,
+            buffer = buffer        -- one buffer only
         })
     end
 end
