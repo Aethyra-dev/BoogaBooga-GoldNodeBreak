@@ -126,9 +126,6 @@ local function swingGoldNodes()
     local resources = workspace:FindFirstChild("Resources")
     if not resources then return end
 
-    -- get the real interpolation buffer (same as the game script)
-    local buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
-
     print("Checking Resources")
     for _, v in pairs(resources:GetChildren()) do
         if v:IsA("Model") and v.Name == "Gold Node" then
@@ -137,7 +134,7 @@ local function swingGoldNodes()
                 local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
                 if part then
                     if (root.Position - part.Position).Magnitude <= RANGE then
-                        print("Adding ID")
+                        print("Adding ID ", id)
                         hits[#hits+1] = id   -- MUST be only the number
                     end
                 end
@@ -151,7 +148,7 @@ local function swingGoldNodes()
             entityIDs = hits,      -- array of numbers
             cframe = char:GetPivot(),
             timestamp = now,
-            buffer = buffer        -- one buffer only
+            buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
         })
     end
     print("Swung!")
