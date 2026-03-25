@@ -150,8 +150,8 @@ local function swingGoldNodes()
             timestamp = now,
             buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
         })
+        print("Swung!")
     end
-    print("Swung!")
 end
 
 --// LOOP
