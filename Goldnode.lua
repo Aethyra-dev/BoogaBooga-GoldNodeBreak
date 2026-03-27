@@ -115,10 +115,7 @@ end)
 --// SWING GOLD NODES
 local function swingGoldNodes()
     local now = getServerTime()
-    if now - lastSwing < 0.08 then
-        print("Too fast!")
-        return 
-    end
+    if now - lastSwing < 0.08 then return end
     lastSwing = now
 
     local hits = {}
@@ -126,7 +123,6 @@ local function swingGoldNodes()
     local resources = workspace:FindFirstChild("Resources")
     if not resources then return end
 
-    print("Checking Resources")
     for _, v in pairs(resources:GetChildren()) do
         if v:IsA("Model") and v.Name == "Gold Node" then
             local id = v:GetAttribute("EntityID")
@@ -134,7 +130,6 @@ local function swingGoldNodes()
                 local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
                 if part then
                     if (root.Position - part.Position).Magnitude <= RANGE then
-                        print("Adding ID ", id)
                         hits[#hits+1] = id   -- MUST be only the number
                     end
                 end
@@ -142,7 +137,6 @@ local function swingGoldNodes()
         end
     end
 
-    print("Swinging!")
     if #hits > 0 then
         Packets.SwingTool.send({
             entityIDs = hits,      -- array of numbers
@@ -150,7 +144,6 @@ local function swingGoldNodes()
             timestamp = now,
             buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
         })
-        print("Swung!")
     end
 end
 
