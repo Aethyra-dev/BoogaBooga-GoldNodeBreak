@@ -130,7 +130,10 @@ local function swingGoldNodes()
                 local part = v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")
                 if part then
                     if (root.Position - part.Position).Magnitude <= RANGE then
-                        hits[#hits+1] = id   -- MUST be only the number
+                        hits[#hits + 1] = {
+                            entityID = id,
+                            buffer = buffer
+                        }
                     end
                 end
             end
