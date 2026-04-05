@@ -132,7 +132,7 @@ local function swingGoldNodes()
                     if (root.Position - part.Position).Magnitude <= RANGE then
                         hits[#hits + 1] = {
                             entityID = id,
-                            buffer = buffer
+                            buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
                         }
                     end
                 end
@@ -144,8 +144,7 @@ local function swingGoldNodes()
         Packets.SwingTool.send({
             entityIDs = hits,      -- array of numbers
             cframe = char:GetPivot(),
-            timestamp = now,
-            buffer = interpolationBuffer.getBuffer(rendering.clientBuffer)
+            timestamp = now
         })
     end
 end
